@@ -50,3 +50,4 @@ Testing/
 build/
 compile_commands.json
 log.txt
+.cache/

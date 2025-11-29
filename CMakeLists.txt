@@ -1,9 +1,9 @@
-cmake_minimum_required(VERSION 3.22)
+cmake_minimum_required(VERSION 4.1)
 
 project(
-	template_cpp23
+	AdventOfCode2025
 	VERSION "0.1.0"
-	DESCRIPTION "C++23 project template"
+	DESCRIPTION "C++23 project for solving Advent of Code 2025 challenges"
 	LANGUAGES CXX
 )
 
@@ -13,13 +13,19 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-message(STATUS "CMAKE_CURRENT_SOURCE_DIR is: ${CMAKE_CURRENT_SOURCE_DIR}")
+Include(FetchContent)
+
+FetchContent_Declare(
+  Catch2
+  GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+  GIT_TAG        v3.11.0
+)
+
+FetchContent_MakeAvailable(Catch2)
+
+include(CTest)
 
 add_subdirectory(src)
 
-add_custom_target(clean_keep_bin
-    COMMAND ${CMAKE_COMMAND} -E echo "Cleaning build folder except ${CMAKE_PROJECT_NAME} and ${CMAKE_PROJECT_NAME}.sha256"
-    COMMAND find ${CMAKE_BINARY_DIR} -type f ! -name '${CMAKE_PROJECT_NAME}' ! -name '${CMAKE_PROJECT_NAME}.sha256' -delete
-    COMMAND find ${CMAKE_BINARY_DIR} -type d -empty -delete
-)
+
 
