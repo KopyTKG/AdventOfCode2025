@@ -30,15 +30,18 @@ foreach(day_dir ${day_dirs})
             add_dependencies(hash_all hash_${DAY_BIN})
         endif()
 
-        if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${day_dir}/test.cpp")
-            add_executable(${DAY_TEST} "${day_dir}/test.cpp")
-            
-            target_link_libraries(${DAY_TEST} PRIVATE Catch2::Catch2WithMain logger)
-            target_include_directories(${DAY_TEST} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/${day_dir}")
-            set_target_properties(${DAY_TEST} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+	if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${day_dir}/test.cpp")
+    		add_executable(${DAY_TEST} "${day_dir}/test.cpp")
+    
+    		target_link_libraries(${DAY_TEST} PRIVATE Catch2::Catch2WithMain logger)
+    		target_include_directories(${DAY_TEST} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/${day_dir}")
+    
+    		set_target_properties(${DAY_TEST} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 
-            add_test(NAME ${DAY_TEST} COMMAND ${DAY_TEST})
-        endif()
+    		target_compile_definitions(${DAY_TEST} PRIVATE TEST_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/${day_dir}/")
+
+    		add_test(NAME ${DAY_TEST} COMMAND ${DAY_TEST})
+	endif()
 
         file(GLOB input_files "${CMAKE_CURRENT_SOURCE_DIR}/${day_dir}/*.txt")
         foreach(input_file ${input_files})
