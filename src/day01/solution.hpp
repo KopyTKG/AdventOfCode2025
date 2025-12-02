@@ -1,7 +1,8 @@
 #pragma DAY01_SOLUTION_HPP
+#pragma once
 
+#include "global/global.hpp"
 #include "logger/logger.hpp"
-#include <filesystem>
 #include <string>
 #include <vector>
 
@@ -9,13 +10,13 @@ const int MIN = 0;
 const int MAX = 100;
 const int START = 50;
 
-int turnLeft(int steps, int *pointer) {
-  bool tdc = (*pointer == MIN);
-  *pointer -= steps;
+int turnLeft(int steps, int &pointer) {
+  bool tdc = (pointer == MIN);
+  pointer -= steps;
 
   int passthrough = 0;
-  while (*pointer < MIN) {
-    *pointer += MAX;
+  while (pointer < MIN) {
+    pointer += MAX;
     passthrough++;
   }
 
@@ -25,15 +26,15 @@ int turnLeft(int steps, int *pointer) {
   return passthrough;
 }
 
-int turnRight(int steps, int *pointer) {
-  *pointer += steps;
+int turnRight(int steps, int &pointer) {
+  pointer += steps;
 
   int passthrough = 0;
-  while (*pointer >= MAX) {
-    *pointer -= MAX;
+  while (pointer >= MAX) {
+    pointer -= MAX;
     passthrough++;
   }
-  if (*pointer == MIN && passthrough > MIN) {
+  if (pointer == MIN && passthrough > MIN) {
     passthrough--;
   }
 
@@ -67,20 +68,9 @@ Line ParseLine(std::string line) {
 }
 
 std::vector<Line> Reader(std::string filename) {
-  std::string line;
-  std::ifstream file;
-  file.open(filename);
-  if (!file.is_open()) {
-    Log::errorf("!!! FATAL ERROR: Could not open file at: {}", filename);
-    Log::errorf("!!! The computer is looking inside: {}",
-                std::filesystem::current_path().string());
-    Log::errorf("!!! It tried to find: {}",
-                std::filesystem::absolute(filename).string());
-    return {};
-  }
-
+  auto lines_str = GLB::Reader(filename);
   std::vector<Line> lines;
-  while (std::getline(file, line)) {
+  for (auto line : lines_str) {
     lines.push_back(ParseLine(line));
   }
   return lines;
@@ -91,9 +81,9 @@ int RunWithZeroCount(std::vector<Line> lines) {
   int cursor = START;
   for (Line l : lines) {
     if (l.dir == Directions::LEFT)
-      turnLeft(l.steps, &cursor);
+      turnLeft(l.steps, cursor);
     else if (l.dir == Directions::RIGHT)
-      turnRight(l.steps, &cursor);
+      turnRight(l.steps, cursor);
     if (cursor == 0)
       zeros++;
   }
@@ -105,10 +95,10 @@ int RunWithPassthroughZeroCount(std::vector<Line> lines) {
   int cursor = START;
   for (Line l : lines) {
     if (l.dir == Directions::LEFT) {
-      int z = turnLeft(l.steps, &cursor);
+      int z = turnLeft(l.steps, cursor);
       zeros += z;
     } else if (l.dir == Directions::RIGHT) {
-      zeros += turnRight(l.steps, &cursor);
+      zeros += turnRight(l.steps, cursor);
     }
     if (cursor == 0)
       zeros++;

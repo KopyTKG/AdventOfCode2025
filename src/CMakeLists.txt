@@ -1,6 +1,8 @@
 add_library(logger INTERFACE)
+add_library(global INTERFACE)
 
 target_include_directories(logger INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}")
+target_include_directories(global INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}")
 
 add_custom_target(hash_all ALL COMMENT "Hashing all binaries...")
 
