@@ -1,2 +1,2 @@
 #pragma once
-constexpr const char *build = "7fa46be-dirty";
+constexpr const char *build = "bff25b0";
